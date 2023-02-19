@@ -60,11 +60,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 public class Drivetrain extends MecanumDrive implements Subsystem {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8.2, 0, 0.0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(8.525, 0, 0.05); //0.05
-    public static double xerror = 0.2;
-    public static double yerror = 0.2;
-    public static double headingerror = Math.toRadians(0.5);
     public static double timeout = 0.5;
-    public double lrks = 0;
     public String voltagemode = "auto";
     // swerve better imo (mason was here)
     public static double LATERAL_MULTIPLIER = 1.777198139065593;

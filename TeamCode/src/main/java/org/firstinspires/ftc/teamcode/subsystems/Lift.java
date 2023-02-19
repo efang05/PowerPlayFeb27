@@ -23,8 +23,8 @@ public class Lift implements Subsystem {
     public Servo horizontalServo2;
 
 
-    private static double kP = 0.022, kI = 0, kD = 0.0003; //0.6, 0, 0.01
-    private static double ff = 0.16;
+    private static double kP = 0.024, kI = 0, kD = 0.0009; //0.6, 0, 0.01
+    private static double ff = 0.17;
 
     private static int MAX_VEL;
     private static int MAX_ACCEL;
