@@ -21,7 +21,6 @@ public class CycleAutoMidAprilTag extends LinearOpMode {
     Pose2d Score_POSE = new Pose2d(41,-12, Math.toRadians(0));
     Pose2d Intake_POSE = new Pose2d(57.75, -12, Math.toRadians(0));
     Pose2d FinalIntake_POSE = new Pose2d(58.75, -12, Math.toRadians(0));
-    Pose2d Park_POSE = new Pose2d(36,-12, Math.toRadians(0));
     Robot robot;
     SleeveDetectorAprilTag detector = new SleeveDetectorAprilTag();
     int parkingPos = 100;
@@ -47,7 +46,6 @@ public class CycleAutoMidAprilTag extends LinearOpMode {
 
     public double scorearm = 0.52;
     private double preloadarm = 0.52;
-
 
     public double scoreangle = -538;
     public double preloadangle = -187.5;
@@ -358,28 +356,27 @@ public class CycleAutoMidAprilTag extends LinearOpMode {
                 })
                 .build();
 
-        TrajectorySequence leftPark = robot.drive.trajectorySequenceBuilder(Sequence1.end())
+        TrajectorySequence leftPark = robot.drive.trajectorySequenceBuilder(Score_POSE)
                 .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(270), DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(270)))
                 .waitSeconds(1.0)
                 .lineToLinearHeading(new Pose2d(12,-12, Math.toRadians(270)))
                 .build();
 
-        TrajectorySequence midPark = robot.drive.trajectorySequenceBuilder(Sequence1.end())
+        TrajectorySequence midPark = robot.drive.trajectorySequenceBuilder(Score_POSE)
                 .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(270), DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(270)))
                 .waitSeconds(1.0)
                 .lineToLinearHeading(new Pose2d(36, -12, Math.toRadians(270)))
                 .build();
 
-        TrajectorySequence rightPark = robot.drive.trajectorySequenceBuilder(Sequence1.end())
+        TrajectorySequence rightPark = robot.drive.trajectorySequenceBuilder(Score_POSE)
                 .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(270), DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(270)))
                 .waitSeconds(1.0)
                 .lineToLinearHeading(new Pose2d(60,-12, Math.toRadians(270)))
                 .build();
-
-
+        // ==================================================================================
 
         robot.drive.setPoseEstimate(START_POSE);
 
@@ -392,8 +389,10 @@ public class CycleAutoMidAprilTag extends LinearOpMode {
         }
 
         detector.stop();
-
+        // ========================================================================================
         waitForStart();
+        robot.drive.followTrajectorySequenceAsync(Sequence1);
+        waitAsync();
 
         if (parkingPos == 99) {
             robot.drive.followTrajectorySequenceAsync(leftPark);
@@ -406,7 +405,6 @@ public class CycleAutoMidAprilTag extends LinearOpMode {
         while (opModeIsActive()) {
             Pose2d poseEstimate = robot.drive.getPoseEstimate();
 
-
             //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             telemetry.addData("turret pos", robot.turret.getCurrentAngle());
             telemetry.addData("turret target", robot.turret.getTargetAngle());
@@ -417,7 +415,30 @@ public class CycleAutoMidAprilTag extends LinearOpMode {
             telemetry.addData("time", timer.seconds());
             telemetry.update();
             robot.update();
-            //drive.update();
+        }
+    }
+
+    private void waitAsync() {
+        while (robot.drive.isBusy() && opModeIsActive() && !isStopRequested()) {
+
+            double loop_time = System.currentTimeMillis() - prev_time;
+            prev_time = System.currentTimeMillis();
+
+            telemetry.addLine("=============    STATUS    =============");
+            telemetry.addData("time", timer.seconds());
+            telemetry.addData("loop time", loop_time);
+            telemetry.addLine("=============  DRIVE TRAIN  =============");
+            Pose2d poseEstimate = robot.drive.getPoseEstimate();
+            telemetry.addData("x", poseEstimate.getX());
+            telemetry.addData("y", poseEstimate.getY());
+            telemetry.addData("heading", poseEstimate.getHeading());
+            telemetry.addLine("=============   SUBSYSTEM   =============");
+            telemetry.addData("turret pos", robot.turret.getCurrentAngle());
+            telemetry.addData("turret target", robot.turret.getTargetAngle());
+            telemetry.addData("slide pos", robot.lift.getCurrentHeight());
+
+            telemetry.update();
+            robot.update();
         }
     }
 }

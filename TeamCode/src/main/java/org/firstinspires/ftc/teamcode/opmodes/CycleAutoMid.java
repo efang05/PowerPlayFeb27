@@ -24,7 +24,7 @@ public class CycleAutoMid extends LinearOpMode {
     Pose2d Preintake = new Pose2d(38,-12, Math.toRadians(0));
     Pose2d Preload_POSE = new Pose2d(38,-12, Math.toRadians(270));
     Pose2d Score_POSE = new Pose2d(41,-12, Math.toRadians(0));
-    Pose2d Intake_POSE = new Pose2d(57.75, -12, Math.toRadians(0));
+    Pose2d Intake_POSE = new Pose2d(57.5, -12, Math.toRadians(0));
     Pose2d FinalIntake_POSE = new Pose2d(58.75, -12, Math.toRadians(0));
     Pose2d Park_POSE = new Pose2d(36,-12, Math.toRadians(0));
     Robot robot;
@@ -32,7 +32,7 @@ public class CycleAutoMid extends LinearOpMode {
     SleeveDetectionPipeline.Color parkingPos = SleeveDetectionPipeline.Color.BLUE;
     private ElapsedTime timer;
 
-    public double liftHigh = 1170;
+    public double liftHigh = 1200;
     public double liftMid = 900;
     public double liftLow = 350;
     public double liftGround = 0;
@@ -47,7 +47,7 @@ public class CycleAutoMid extends LinearOpMode {
     public double turretRight = 990;
 
     //change after tuning horizontal slides
-    public double hzslidesout = 0.969;
+    public double hzslidesout = 0.954;
     public double hzslidesin = 0.3;
 
     public double scorearm = 0.52;
@@ -60,11 +60,11 @@ public class CycleAutoMid extends LinearOpMode {
 
     private double prev_time = System.currentTimeMillis();
 
-    private double fifthcone = 90;
-    private double fourthcone = 70;
-    private double thirdcone = 50;
-    private double secondcone = 30;
-    private double firstcone = 10;
+    private double fifthcone = 120;
+    private double fourthcone = 96;
+    private double thirdcone = 64;
+    private double secondcone = 49;
+    private double firstcone = 30;
     private double preloadhorizontal = 0.72;
 
     private double intakingturret = 0.8;

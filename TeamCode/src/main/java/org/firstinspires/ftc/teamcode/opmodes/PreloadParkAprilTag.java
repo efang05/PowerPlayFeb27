@@ -57,20 +57,37 @@ public class PreloadParkAprilTag extends LinearOpMode {
 
     double prev_time = 0;
 
+    private void waitAsync() {
+        while (robot.drive.isBusy() && opModeIsActive() && !isStopRequested()) {
 
-    public void runOpMode() {
-        timer = new ElapsedTime();
-        String start_position = "right";
+            double loop_time = System.currentTimeMillis() - prev_time;
+            prev_time = System.currentTimeMillis();
 
-        detector.init(hardwareMap, telemetry);
-        robot = new Robot(telemetry, hardwareMap);
-        robot.init();
-        robot.intake.closeClaw();
-        sleep(500);
-        robot.intake.dropArm();
+            telemetry.addLine("=============    STATUS    =============");
+            telemetry.addData("time", timer.seconds());
+            telemetry.addData("loop time", loop_time);
+            telemetry.addData("tag", parkingPos);
+            telemetry.addLine("");
+            telemetry.addLine("");
+            telemetry.addLine("=============  DRIVE TRAIN  =============");
+            Pose2d poseEstimate = robot.drive.getPoseEstimate();
+            telemetry.addData("x", poseEstimate.getX());
+            telemetry.addData("y", poseEstimate.getY());
+            telemetry.addData("heading", poseEstimate.getHeading());
+            telemetry.addLine("");
+            telemetry.addLine("");
 
-        robot.turret.MAX_POWER = 0.725;
-        robot.drive.voltagemode = "auto";
+            telemetry.addLine("=============   SUBSYSTEM   =============");
+            telemetry.addData("turret pos", robot.turret.getCurrentAngle());
+            telemetry.addData("turret target", robot.turret.getTargetAngle());
+            telemetry.addData("slide pos", robot.lift.getCurrentHeight());
+
+            telemetry.update();
+            robot.update();
+        }
+    }
+
+    private TrajectorySequence build_preload() {
         TrajectorySequence Sequence = robot.drive.trajectorySequenceBuilder(START_POSE)
                 .setVelConstraint(robot.drive.getVelocityConstraint(30, Math.toRadians(180), DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(Preload_POSE)
@@ -81,7 +98,7 @@ public class PreloadParkAprilTag extends LinearOpMode {
                 })
                 .UNSTABLE_addTemporalMarkerOffset(-2, () -> {
                     robot.turret.setTargetAngle(533);
-                    robot.lift.setTargetHeight(liftHigh);
+//                    robot.lift.setTargetHeight(liftHigh);
                     robot.intake.setArmPos(0.75);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.01, () -> {
@@ -114,24 +131,45 @@ public class PreloadParkAprilTag extends LinearOpMode {
 //                    robot.lift.setTargetHeight(0);
 //                })
                 .build();
+
+        return Sequence;
+    }
+
+    private void auto_init() {
+        detector.init(hardwareMap, telemetry);
+        robot = new Robot(telemetry, hardwareMap);
+        robot.init();
+        robot.intake.closeClaw();
+        sleep(500);
+        robot.intake.dropArm();
+
+        robot.turret.MAX_POWER = 0.725;
+        robot.drive.voltagemode = "auto";
+    }
+    public void runOpMode() {
+        timer = new ElapsedTime();
+        String start_position = "right";
+
+        auto_init();
+
         // =========================================================
+        TrajectorySequence Sequence = build_preload();
 
-
-        TrajectorySequence leftPark = robot.drive.trajectorySequenceBuilder(Sequence.end())
+        TrajectorySequence leftPark = robot.drive.trajectorySequenceBuilder(Preload_POSE)
                 .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(270), DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(270)))
                 .waitSeconds(1.0)
                 .lineToLinearHeading(new Pose2d(12,-12, Math.toRadians(270)))
                 .build();
 
-        TrajectorySequence midPark = robot.drive.trajectorySequenceBuilder(Sequence.end())
+        TrajectorySequence midPark = robot.drive.trajectorySequenceBuilder(Preload_POSE)
                 .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(270), DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(270)))
                 .waitSeconds(1.0)
                 .lineToLinearHeading(new Pose2d(36, -12, Math.toRadians(270)))
                 .build();
 
-        TrajectorySequence rightPark = robot.drive.trajectorySequenceBuilder(Sequence.end())
+        TrajectorySequence rightPark = robot.drive.trajectorySequenceBuilder(Preload_POSE)
                 .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(270), DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(270)))
                 .waitSeconds(1.0)
@@ -144,22 +182,17 @@ public class PreloadParkAprilTag extends LinearOpMode {
 
         while(!isStarted()){
             parkingPos = detector.getParkPos();
-
             telemetry.addData("tag", parkingPos);
             telemetry.addData("time", timer.seconds());
-            telemetry.addData("start position", start_position);
-            telemetry.addData("start x", START_POSE.getX());
-            telemetry.addData("start y", START_POSE.getY());
-            telemetry.addData("start heading", Math.toDegrees(START_POSE.getHeading()));
             telemetry.update();
         }
 
         waitForStart();
         detector.stop();
-
         timer.reset();
-        // auto sequence
+        // auto sequence preload
         robot.drive.followTrajectorySequenceAsync(Sequence);
+        waitAsync();
 
         if (parkingPos == 99) {
             robot.drive.followTrajectorySequenceAsync(leftPark);
@@ -169,7 +202,7 @@ public class PreloadParkAprilTag extends LinearOpMode {
             robot.drive.followTrajectorySequenceAsync(rightPark);
         }
 
-        while (opModeIsActive()) {
+        while (opModeIsActive() && !isStopRequested()) {
 
             double loop_time = System.currentTimeMillis() - prev_time;
             prev_time = System.currentTimeMillis();
@@ -178,23 +211,17 @@ public class PreloadParkAprilTag extends LinearOpMode {
             telemetry.addData("time", timer.seconds());
             telemetry.addData("loop time", loop_time);
             telemetry.addData("tag", parkingPos);
-            telemetry.addLine("");
-            telemetry.addLine("");
             telemetry.addLine("=============  DRIVE TRAIN  =============");
             Pose2d poseEstimate = robot.drive.getPoseEstimate();
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
-            telemetry.addLine("");
-            telemetry.addLine("");
-
             telemetry.addLine("=============   SUBSYSTEM   =============");
             telemetry.addData("turret pos", robot.turret.getCurrentAngle());
             telemetry.addData("turret target", robot.turret.getTargetAngle());
             telemetry.addData("slide pos", robot.lift.getCurrentHeight());
 
             telemetry.update();
-            //sleep(10);
             robot.update();
         }
     }
