@@ -387,9 +387,6 @@ public class CycleAutoMid extends LinearOpMode {
 
         while (opModeIsActive()) {
             Pose2d poseEstimate = robot.drive.getPoseEstimate();
-
-
-            //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             telemetry.addData("turret pos", robot.turret.getCurrentAngle());
             telemetry.addData("turret target", robot.turret.getTargetAngle());
             telemetry.addData("slide pos", robot.lift.getCurrentHeight());
@@ -399,7 +396,6 @@ public class CycleAutoMid extends LinearOpMode {
             telemetry.addData("time", timer.seconds());
             telemetry.update();
             robot.update();
-            //drive.update();
         }
     }
 }
