@@ -79,7 +79,7 @@ public class CycleAutoMidAprilTag extends LinearOpMode {
         robot.drive.voltagemode = "auto";
 
         TrajectorySequence Sequence1 = robot.drive.trajectorySequenceBuilder(START_POSE)
-                .setVelConstraint(robot.drive.getVelocityConstraint(40, Math.toRadians(270), DriveConstants.TRACK_WIDTH))
+                .setVelConstraint(robot.drive.getVelocityConstraint(40, Math.toRadians(180), DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(Preload_POSE)
                 .UNSTABLE_addTemporalMarkerOffset(-4, () -> {
                     robot.lift.setHorizontalPosition(hzslidesin);
@@ -349,32 +349,26 @@ public class CycleAutoMidAprilTag extends LinearOpMode {
                     robot.turret.setTargetAngle(intakeangle);
                     robot.lift.setTargetHeight(preintakepos);
                 })
-                .setVelConstraint(robot.drive.getVelocityConstraint(60, Math.toRadians(180), DriveConstants.TRACK_WIDTH))
-                .forward(20)
+//                .setVelConstraint(robot.drive.getVelocityConstraint(60, Math.toRadians(180), DriveConstants.TRACK_WIDTH))
+//                .forward(20)
                 .UNSTABLE_addTemporalMarkerOffset(-0.6, () -> {
                     robot.lift.setTargetHeight(0);
                 })
                 .build();
 
         TrajectorySequence leftPark = robot.drive.trajectorySequenceBuilder(Score_POSE)
-                .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(270), DriveConstants.TRACK_WIDTH))
-                .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(270)))
-                .waitSeconds(1.0)
-                .lineToLinearHeading(new Pose2d(12,-12, Math.toRadians(270)))
+                .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(180), DriveConstants.TRACK_WIDTH))
+                .lineToLinearHeading(new Pose2d(12,-12, Math.toRadians(0)))
                 .build();
 
         TrajectorySequence midPark = robot.drive.trajectorySequenceBuilder(Score_POSE)
-                .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(270), DriveConstants.TRACK_WIDTH))
-                .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(270)))
-                .waitSeconds(1.0)
-                .lineToLinearHeading(new Pose2d(36, -12, Math.toRadians(270)))
+                .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(180), DriveConstants.TRACK_WIDTH))
+                .lineToLinearHeading(new Pose2d(36, -12, Math.toRadians(0)))
                 .build();
 
         TrajectorySequence rightPark = robot.drive.trajectorySequenceBuilder(Score_POSE)
-                .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(270), DriveConstants.TRACK_WIDTH))
-                .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(270)))
-                .waitSeconds(1.0)
-                .lineToLinearHeading(new Pose2d(60,-12, Math.toRadians(270)))
+                .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(180), DriveConstants.TRACK_WIDTH))
+                .lineToLinearHeading(new Pose2d(60,-12, Math.toRadians(0)))
                 .build();
         // ==================================================================================
 
