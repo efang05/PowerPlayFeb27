@@ -86,7 +86,7 @@ public class CycleAutoMid extends LinearOpMode {
         robot.drive.voltagemode = "auto";
 
         TrajectorySequence Sequence1 = robot.drive.trajectorySequenceBuilder(START_POSE)
-                .setVelConstraint(robot.drive.getVelocityConstraint(40, Math.toRadians(270), DriveConstants.TRACK_WIDTH))
+                .setVelConstraint(robot.drive.getVelocityConstraint(40, Math.toRadians(180), DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(Preload_POSE)
                 .UNSTABLE_addTemporalMarkerOffset(-4, () -> {
                     robot.lift.setHorizontalPosition(hzslidesin);

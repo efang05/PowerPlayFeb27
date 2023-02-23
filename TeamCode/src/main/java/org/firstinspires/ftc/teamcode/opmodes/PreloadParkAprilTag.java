@@ -156,21 +156,21 @@ public class PreloadParkAprilTag extends LinearOpMode {
         TrajectorySequence Sequence = build_preload();
 
         TrajectorySequence leftPark = robot.drive.trajectorySequenceBuilder(Preload_POSE)
-                .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(270), DriveConstants.TRACK_WIDTH))
+                .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(180), DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(270)))
                 .waitSeconds(1.0)
                 .lineToLinearHeading(new Pose2d(12,-12, Math.toRadians(270)))
                 .build();
 
         TrajectorySequence midPark = robot.drive.trajectorySequenceBuilder(Preload_POSE)
-                .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(270), DriveConstants.TRACK_WIDTH))
+                .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(180), DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(270)))
                 .waitSeconds(1.0)
                 .lineToLinearHeading(new Pose2d(36, -12, Math.toRadians(270)))
                 .build();
 
         TrajectorySequence rightPark = robot.drive.trajectorySequenceBuilder(Preload_POSE)
-                .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(270), DriveConstants.TRACK_WIDTH))
+                .setVelConstraint(robot.drive.getVelocityConstraint(20, Math.toRadians(180), DriveConstants.TRACK_WIDTH))
                 .lineToLinearHeading(new Pose2d(40,-12, Math.toRadians(270)))
                 .waitSeconds(1.0)
                 .lineToLinearHeading(new Pose2d(60,-12, Math.toRadians(270)))
