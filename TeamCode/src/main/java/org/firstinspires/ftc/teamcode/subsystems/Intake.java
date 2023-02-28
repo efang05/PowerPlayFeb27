@@ -29,7 +29,7 @@ public class Intake implements Subsystem {
     public Servo clawServo;
     public Servo armServo1;
     public Servo armServo2;
-    public Servo fallencone1;
+    public Servo aligner;
 //    public CRServo intakeServo1;
 //    public CRServo intakeServo2;
 //    public CRServo intakeServo3;
@@ -42,7 +42,7 @@ public class Intake implements Subsystem {
         clawServoB = hardwareMap.get(Servo.class, "claw2");
         armServo1 = hardwareMap.get(Servo.class, "arm");
         armServo2 = hardwareMap.get(Servo.class, "arm2");
-        fallencone1 = hardwareMap.get(Servo.class, "fallencone");
+        aligner = hardwareMap.get(Servo.class, "fallencone");
 //        intakeServo1 = hardwareMap.get(CRServo.class, "intake1");
 //        intakeServo2 = hardwareMap.get(CRServo.class, "intake2");
 //        intakeServo3 = hardwareMap.get(CRServo.class, "intake3");
@@ -64,20 +64,8 @@ public class Intake implements Subsystem {
 
     }
 
-
-
-    public void intake(double power){
-//        intakeServo1.setPower(power);
-//        intakeServo2.setPower(-power);
-//        intakeServo3.setPower(-power);
-//        intakeServo4.setPower(power);
-    }
-
-    public void stopIntake(){
-//        intakeServo1.setPower(0);
-//        intakeServo2.setPower(0);
-//        intakeServo3.setPower(0);
-//        intakeServo4.setPower(0);
+    public void setAligner(double position){
+        aligner.setPosition(position);
     }
 
     public void setClawPos(double position){
@@ -112,10 +100,6 @@ public class Intake implements Subsystem {
 
     public void centerArm(){
         setArmPos(centeredArm);
-    }
-
-    public void setfallenpos(double position){
-        fallencone1.setPosition(position);
     }
 
     public void dropArm(){

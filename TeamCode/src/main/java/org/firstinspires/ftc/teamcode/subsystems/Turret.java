@@ -15,8 +15,8 @@ public class Turret implements Subsystem {
 
     public DcMotorEx tmotor;
 
-    public static double kP = 0.012, kI = 0, kD = 0.000002, ff = 0;
-    public static double integralSum = 0;
+    public double kP = 0.012, kI = 0, kD = 0.000002, ff = 0;
+    public double integralSum = 0;
     private double lastError = 0;
 
     public double targetAngle = 0;
